@@ -46,16 +46,6 @@ class Form extends Model
     ];
 
     /**
-     * A Form belongs to a User
-     *
-     * @return Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    /**
      * A Form has many Submission
      *
      * @return Illuminate\Database\Eloquent\Relations\HasMany
@@ -132,9 +122,9 @@ class Form extends Model
      * @param User $user
      * @return Illuminate\Database\Eloquent\Collection
      */
-    public static function getForUser($user)
+    public static function getForms()
     {
-        return static::where('user_id', $user->id)
+        return static::all()
                     ->withCount('submissions')
                     ->latest()
                     ->paginate(100);
