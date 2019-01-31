@@ -7,7 +7,7 @@ Last Updated: 12/29/2018
 ----------------------*/
 namespace jazmy\FormBuilder\Models;
 
-use App\User;
+use App\Prospect;
 use jazmy\FormBuilder\Models\Form;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
@@ -47,7 +47,7 @@ class Submission extends Model
      */
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Prospect::class);
     }
 
     /**
@@ -68,7 +68,7 @@ class Submission extends Model
      */
     public static function getForUser($user)
     {
-        return static::where('user_id', $user->id)->with('form')->latest()->paginate(100);
+        return static::where('prospect_id', $user->id)->with('form')->latest()->paginate(100);
     }
 
     /**

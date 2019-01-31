@@ -7,7 +7,6 @@ Last Updated: 12/29/2018
 ----------------------*/
 namespace jazmy\FormBuilder\Models;
 
-use App\User;
 use jazmy\FormBuilder\Models\Submission;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
