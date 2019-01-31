@@ -39,7 +39,7 @@ class FormController extends Controller
     {
         $pageTitle = "Forms";
 
-        $forms = Form::getForUser(auth()->user());
+        $forms = Form::getForms();
 
         return view('formbuilder::forms.index', compact('pageTitle', 'forms'));
     }
@@ -69,14 +69,10 @@ class FormController extends Controller
      */
     public function store(SaveFormRequest $request)
     {
-        $user = $request->user();
-
-        $input = $request->merge(['user_id' => $user->id])->except('_token');
-
         DB::beginTransaction();
 
         // generate a random identifier
-        $input['identifier'] = $user->id.'-'.Helper::randomString(20);
+        $input['identifier'] = '1-'.Helper::randomString(20);
         $created = Form::create($input);
 
         try {
@@ -108,9 +104,7 @@ class FormController extends Controller
      */
     public function show($id)
     {
-        $user = auth()->user();
-        $form = Form::where(['user_id' => $user->id, 'id' => $id])
-                    ->with('user')
+        $form = Form::where(['id' => $id])
                     ->withCount('submissions')
                     ->firstOrFail();
 
@@ -127,9 +121,7 @@ class FormController extends Controller
      */
     public function edit($id)
     {
-        $user = auth()->user();
-
-        $form = Form::where(['user_id' => $user->id, 'id' => $id])->firstOrFail();
+        $form = Form::where(['id' => $id])->firstOrFail();
 
         $pageTitle = 'Edit Form';
 
@@ -150,8 +142,7 @@ class FormController extends Controller
      */
     public function update(SaveFormRequest $request, $id)
     {
-        $user = auth()->user();
-        $form = Form::where(['user_id' => $user->id, 'id' => $id])->firstOrFail();
+        $form = Form::where(['id' => $id])->firstOrFail();
 
         $input = $request->except('_token');
 
@@ -178,8 +169,7 @@ class FormController extends Controller
      */
     public function destroy($id)
     {
-        $user = auth()->user();
-        $form = Form::where(['user_id' => $user->id, 'id' => $id])->firstOrFail();
+        $form = Form::where(['id' => $id])->firstOrFail();
         $form->delete();
 
         // dispatch the event

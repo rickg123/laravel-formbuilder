@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use jazmy\FormBuilder\Models\Submission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Throwable;
 
 class MySubmissionController extends Controller
@@ -35,7 +36,7 @@ class MySubmissionController extends Controller
      */
     public function index()
     {
-        $user = auth()->user();
+        $user = Auth::guard('prospect')->user();
 
         $submissions = Submission::getForUser($user);
 
@@ -52,8 +53,8 @@ class MySubmissionController extends Controller
      */
     public function show($id)
     {
-        $user = auth()->user();
-        $submission = Submission::where(['user_id' => $user->id, 'id' => $id])
+        $user = Auth::guard('prospect')->user();
+        $submission = Submission::where(['prospect_id' => $user->id, 'id' => $id])
                             ->with('form')
                             ->firstOrFail();
 
@@ -72,8 +73,8 @@ class MySubmissionController extends Controller
      */
     public function edit($id)
     {
-        $user = auth()->user();
-        $submission = Submission::where(['user_id' => $user->id, 'id' => $id])
+        $user = Auth::guard('prospect')->user();
+        $submission = Submission::where(['prospect_id' => $user->id, 'id' => $id])
                             ->with('form')
                             ->firstOrFail();
 
@@ -95,8 +96,8 @@ class MySubmissionController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $user = auth()->user();
-        $submission = Submission::where(['user_id' => $user->id, 'id' => $id])->firstOrFail();
+        $user = Auth::guard('prospect')->user();
+        $submission = Submission::where(['prospect_id' => $user->id, 'id' => $id])->firstOrFail();
 
         DB::beginTransaction();
 
@@ -136,8 +137,8 @@ class MySubmissionController extends Controller
      */
     public function destroy($id)
     {
-        $user = auth()->user();
-        $submission = Submission::where(['user_id' => $user->id, 'id' => $id])->firstOrFail();
+        $user = Auth::guard('prospect')->user();
+        $submission = Submission::where(['prospect_id' => $user->id, 'id' => $id])->firstOrFail();
         $submission->delete();
 
         return redirect()
